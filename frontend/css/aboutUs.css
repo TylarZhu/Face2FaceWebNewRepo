@@ -1,0 +1,17 @@
+/* Set a background image by replacing the URL below */
+body {
+    background: url('https://dslv9ilpbe7p1.cloudfront.net/r63wrTNgTWD5UIkcBWUJ-w_store_banner_image.jpeg') no-repeat center center fixed;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    background-size: cover;
+    -o-background-size: cover;
+  }
+
+.tylarImg{
+    width: 300px;
+    height: 400px;
+}
+
+.padding{
+  height: 50px;
+}

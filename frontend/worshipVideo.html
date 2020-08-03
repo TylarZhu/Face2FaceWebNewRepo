@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Face 2 Face</title>
+    <link rel="icon" type="image/x-icon" href="assets/img/criss-cross.png"/>
+
+    <!-- Bootstrap core CSS -->
+    <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.css" />
+
+    <!-- Custom styles for this template -->
+    <link href="css/worshipVideo.css" rel="stylesheet">
+  </head>
+
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-light fixed-top mb-5 shadow">
+      <div class="container">
+          <a class="navbar-brand" href="../index.html">Face 2 Face</a>
+          <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+              <span class="navbar-toggler-icon"></span>
+              </button>
+          <div class="collapse navbar-collapse" id="navbarResponsive">
+          <ul class="navbar-nav ml-auto" id="navbarMenu">
+              <li class="nav-item">
+                  <a class="nav-link" href="../index.html">Home
+                      <span class="sr-only">(current)</span>
+                  </a>
+              </li>
+              <li class="nav-item dropdown" id="searchNav">
+                <a class="nav-link dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                    Search
+                </a>
+                <div class="dropdown-menu animate slideIn">
+                  <form class="px-3 py-6" id="searchWorshipVideo">
+                    <div class="form-group">
+                      <label for="exampleFormControlSelect1">Search Option</label>
+                      <select class="form-control" onchange="searchChoice()" id="formControlSelect">
+                        <option>Author</option>
+                        <option>Title</option>
+                        <option>Date</option>
+                      </select>
+                    </div>
+                    <div class="form-group" id="searchTab">
+                      <input type="text" class="form-control" placeholder="Search Info" id="videoInfo" required>
+                    </div>
+                    <button class="btn btn-info" type="submit">Go!</button>
+                  </form>
+                </div>
+              </li>
+          </ul>
+          </div>
+      </div>
+    </nav>
+
+    <script>
+      function searchChoice() {
+        let choice = document.getElementById("formControlSelect").value;
+        if(choice === "Date") {
+          document.getElementById('searchTab').innerHTML=``;
+          document.getElementById('searchTab').innerHTML=`
+          <input type="date" class="form-control" placeholder="Search Info" id="videoInfo" required>
+          `;
+        } else {
+          document.getElementById('searchTab').innerHTML=``;
+          document.getElementById('searchTab').innerHTML=`
+          <input type="text" class="form-control" placeholder="Search Info" id="videoInfo" required>
+          `;
+        }
+      }
+    </script>
+
+    <!-- Page Content -->
+    <div class="container">
+      <h1 class="my-4 text-white">Worship Videos</h1>
+
+      <div class="row" id="worshipVideoArea"></div>
+    </div>
+
+    <div class="col">
+      <ul class="pagination justify-content-center mb-4">
+        <li class="page-item">
+          <button class="btn btn-success" id="worshipVideoPrev">&larr; Older</button>
+        </li>
+        <li class="page-item">
+          <button class="btn btn-warning" id="worshipVideoNext">Newer &rarr;</button>
+        </li>
+      </ul>
+    </div>
+
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="uploadNewsletters" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="uploadWorshipVideo">Worship Video Upload</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form action='/worshipVideo/' method="POST" enctype="multipart/form-data" id="worshipVideoForm">
+              <div class="form-group">
+                <label for="exampleInputEmail1">Worship Video Title</label>
+                <input type="text" class="form-control" id="worshipVideoTitle" placeholder="Enter Title" name="title" required>
+                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Worship Video Author</label>
+                <input type="text" class="form-control" id="worshipVideoAuthor" placeholder="Enter Author" name="author" required>
+                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+              </div>
+              <div class="form-group">
+                <label for="exampleInputEmail1">Worship Video Date</label>
+                <input type="date" class="form-control" id="worshipVideoAuthor" placeholder="Enter Date" name="date" required>
+                <!-- <small id="emailHelp" class="form-text text-muted">We'll never share your email with anyone else.</small> -->
+              </div>
+              <div class="form-group">
+                <input type="file" name="worshipVideo" id="worshipVideo" required/>
+                <small id="emailHelp" class="form-text text-muted">Video must be in mp4 format.</small>
+                <small id="emailHelp" class="form-text text-muted">Video size must smaller than 70MB (less than 6 minutes).</small>
+              </div>
+              <button type="submit" class="btn btn-primary">Upload</button>
+              <!-- <div class="spinner-border text-danger" role="status">
+                <span class="sr-only">Loading...</span>
+              </div> -->
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="modal fade" id="videoModal" tabindex="-1" role="dialog" aria-labelledby="uploadNewsletters" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header" id="videoTitle">
+          </div>
+          <div class="modal-body">
+            <div class="embed-responsive embed-responsive-21by9" id="videoDisplay">
+            </div> 
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="fixed-bottom" id="errorBox"></div>
+  </body>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-dark">
+    <div class="container">
+      <p class="m-0 text-center text-white">Copyright &copy; Face 2 Face 2020</p>
+    </div>
+    <!-- /.container -->
+
+    <!-- Bootstrap core JavaScript -->
+    <!-- <script src="vendor/jquery/jquery.min.js"></script>
+    <script src="vendor/bootstrap/js/bootstrap.bundle.min.js"></script> -->
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js" integrity="sha384-b/U6ypiBEHpOf/4+1nzFpr53nxSS+GLCkfwBdFNTxtclqqenISfwAzpKaMNFNmj4" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta/js/bootstrap.min.js" integrity="sha384-h0AbiXch4ZDo7tp9hKZ4TsHbi047NrKGLO3SEJAg45jXxnGIfYzk4Si90RDIqNm1" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script src="https://kit.fontawesome.com/776a2de339.js" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ekko-lightbox/5.3.0/ekko-lightbox.js"></script>
+
+    <script>
+      $(document).on('click', '[data-toggle="lightbox"]', function(event) {
+          event.preventDefault();
+          $(this).ekkoLightbox();
+      });
+    </script>
+
+    <script src="js/worshipVideo.js"></script>
+    <script src="js/api.js"></script>
+  </footer>
+
+</html>
