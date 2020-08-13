@@ -1,7 +1,8 @@
-/* .modal-dialog {
-    max-width: 400px;
+.modal-dialog {
+    max-width: 650px;
+    max-height: 650px;
     margin: 30px auto;
-} */
+}
 
 .img-wrap {
     position: relative;
@@ -12,15 +13,15 @@
     right: 0px;
     z-index: 100;
 }
-.thumbnail img{
+/* .thumbnail img{
     width: 100%;
     height: 250px;
     display: block;
-}
+} */
 
-.flex-column { 
+/* .flex-column { 
     max-width : 260px;
-}
+} */
 
 /* img {
     margin: 5px;
@@ -41,9 +42,9 @@
 /* .carousel {
     width: 200px;
     height: 200px;
-} */
+}
 
-/* .carousel-inner > .carousel-item > img {
+.carousel-inner > .carousel-item > img {
     width:100px;
     height:400px;
-  } */
+} */

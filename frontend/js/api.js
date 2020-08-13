@@ -209,6 +209,44 @@ let api = (function(){
         });
     }
 
+    module.createFile = function(filename){
+        send("POST", "/createFile/", {filename: filename}, function(err, res) {
+            if(err) return notifyErrorListeners(err);
+            window.location.replace("/ourBlog.html");
+            notifFilesListeners();
+        });
+    }
+
+    module.deleteFile = function(id) {
+        send("DELETE", '/deleteFile/', {id: id}, function(err, res) {
+            if(err) return notifyErrorListeners(err);
+            notifFilesListeners();
+        });
+    }
+
+    module.getFiles = function(callback){
+        send("GET", "/files/", undefined, callback);
+    }
+
+    let filesListeners = [];
+
+    function notifFilesListeners(){
+        api.getFiles(function(err, files) {
+            if(err) return notifyErrorListeners(err);
+            filesListeners.forEach(function(listener){
+                listener(files);
+            });
+        });
+    }
+
+    module.onFileUpdate = function(handler){
+        api.getFiles(function(err, files) {
+            if(err) return notifyErrorListeners(err);
+            filesListeners.push(handler);
+            handler(files);
+        });
+    };
+
     let userListeners = [];
 
     function notifyUserListeners(){

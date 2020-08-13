@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <title>Face 2 Face</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="assets/img/criss-cross.png"/>
+
+        <!-- <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet"> -->
+        <link href="css/ourBlog.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+        
+    </head>
+
+    <body>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light mb-5 shadow">
+            <div class="container">
+                <a class="navbar-brand" href="../index.html">Face 2 Face</a>
+                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ml-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="../index.html">Home
+                            <span class="sr-only">(current)</span>
+                        </a>
+                    </li>
+                </ul>
+                </div>
+            </div>
+        </nav>
+
+        <div class="container">
+            <h1 class="my-4 text-white">
+                <i class="far fa-books"></i>
+                Our Blog
+            </h1>
+
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="btn-group pt-5 pb-3">
+                        <button type="button" class="btn btn-success btn-lg dropdown-toggle dropdown-toggle-split" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <span class="sr-only">Toggle Dropdown</span>
+                        </button>
+                        <button class="btn btn-success btn-lg" type="button">
+                            Files
+                        </button>
+                        <span data-toggle="tooltip" data-placement="top" title="Add A File">
+                            <button class="btn btn-warning btn-lg" type="button" data-toggle="modal" data-target="#exampleModal">
+                                <i class="far fa-plus-circle"></i>
+                            </button>
+                        </span>
+                        <div class="dropdown-menu" id="fileList">
+                            <!-- <div class="dropdown-item">
+                                <i class="fal fa-folder fa-lg">
+                                    Cherry Picking
+                                </i>
+                                <span class="badge badge-danger">99+</span>
+
+                                <button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="View Blogs">
+                                    <i class="far fa-eye"></i>
+                                </button>
+                                <span data-toggle="tooltip" data-placement="top" title="Post A Blog">
+                                    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#postBlog">
+                                        <i class="far fa-file-plus"></i>
+                                    </button>
+                                </span>
+                                <button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete This File">
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </div> -->
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="col-lg-9">
+                    <div class="card border-0 shadow my-5">
+                        <div class="card-body p-5" data-aos="fade-up" id="blogArea">
+                            <!-- <div class="row pb-5">
+                                <div class="w-100"></div>
+                                <div class="col">
+                                    <img src="../assets/img/teammemberPicture/IMG_2048.jpg" class="img-fluid rounded" alt="Card image cap">
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="card-block px-2">
+                                        <h5 class="card-title">Xingyuan Zhu</h5>
+                                        <small id="emailHelp" class="text-muted">Author: Tylar</small>
+                                        <small id="emailHelp" class="text-muted">Date: 2019/12/01</small>
+                                        <hr/>
+                                        <p class="card-text">Hi everyone, My name is Xingyuan Zhu, you can also call me Tylar. I am currently a 4th-year student at the University of Toronto, and I baptized at Easter 2018. Praise God that he let me join the Face 2 Face team and make me grow deeper in Christ. We are looking forward to seeing you join our worship! asdfsfsadfasdfsdfafdsadf</p>
+                                    </div>
+                                </div>
+                                <div class="w-100"></div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-outline-success"> 
+                                        More Pictures
+                                        <i class="far fa-glasses-alt"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger"> 
+                                        delete
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div> -->
+
+
+                            <!-- <div class="row">
+                                <div class="w-100"></div>
+                                <div class="col">
+                                    <img src="../assets/img/teammemberPicture/IMG_2048.jpg" class="img-fluid rounded" alt="Card image cap">
+                                </div>
+                                <div class="col-sm-5">
+                                    <div class="card-block px-2">
+                                        <h5 class="card-title">Xingyuan Zhu</h5>
+                                        <small id="emailHelp" class="text-muted">Author: Tylar</small>
+                                        <small id="emailHelp" class="text-muted">Date: 2019/12/01</small>
+                                        <hr/>
+                                        <p class="card-text">Hi everyone, My name is Xingyuan Zhu, you can also call me Tylar. I am currently a 4th-year student at the University of Toronto, and I baptized at Easter 2018. Praise God that he let me join the Face 2 Face team and make me grow deeper in Christ. We are looking forward to seeing you join our worship! asdfsfsadfasdfsdfafdsadf</p>
+                                    </div>
+                                </div>
+                                <div class="w-100"></div>
+                                <div class="col">
+                                    <button type="button" class="btn btn-outline-success"> 
+                                        Read More
+                                        <i class="far fa-glasses-alt"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger"> 
+                                        delete
+                                        <i class="far fa-trash-alt"></i>
+                                    </button>
+                                </div>
+                            </div>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Add A File</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="newFile">
+                            <div class="form-group">
+                                <label for="exampleInputEmail1">File Name</label>
+                                <input type="text" class="form-control" id="fileName" aria-describedby="emailHelp" placeholder="Enter Name" required>
+                                <small id="emailHelp" class="form-text text-muted">Name should less than 15 character.</small>
+                            </div>
+                            <button type="submit" class="btn btn-outline-primary">
+                                Add
+                                <i class="fal fa-folder-plus fa-lg"></i>
+                            </button>
+                        </form>
+                        <div id="filenameError"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="postBlog" tabindex="-1" role="dialog" aria-labelledby="postBloglLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="postBloglLabel">Post A Blog</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body" id="blogUploadForm">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="fixed-bottom" id="errorBox"></div>
+
+        <script src="https://kit.fontawesome.com/776a2de339.js" crossorigin="anonymous"></script>
+        <script src="https://unpkg.com/aos@next/dist/aos.js"></script>
+        <script>
+            AOS.init();
+        </script>
+        
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+        <script type="text/javascript">
+            $(document).ready(function() {
+                $("body").tooltip({ selector: '[data-toggle=tooltip]' });
+            });
+        </script>
+
+        <script src="js/ourBlog.js"></script>
+        <script src="js/api.js"></script>
+    </body>
+</html>

@@ -23,7 +23,7 @@
                     <div class="dropdown-menu animate slideIn">
                         <a class="dropdown-item nav-link text-muted" href="../aboutUs.html">Our Team</a>
                         <a class="dropdown-item nav-link text-muted" href="../ourBelieve.html">Our Beliefs</a>
-                        <a class="dropdown-item nav-link text-muted" href="../ourGallery.html">Our Gallery</a>
+                        <a class="dropdown-item nav-link text-muted" href="../ourBlog.html">Our Blog</a>
                     </div>
                 </li>
                 <li class="nav-item dropdown">

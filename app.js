@@ -10,8 +10,6 @@ const mongoose = require('mongoose');
 const multer  = require('multer');
 const bodyParser = require('body-parser');
 require('events').EventEmitter.defaultMaxListeners = 30;
-const mailgun = require("mailgun-js");
-const DOMAIN = 'face2facehomechurch.com';
 
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -81,6 +79,21 @@ let WorshipVideosSchema = new mongoose.Schema({
 });
 let WorshipVideos = mongoose.model('WorshipVideos', WorshipVideosSchema);
 
+let File = new mongoose.Schema({
+    fileName: String,
+    posts: [{
+        pictures: [{
+            picturePath: {type: String, default: 'none'},
+            pictureType: {type: String, default: 'none'}
+        }],
+        title: {type: String, default: 'none'},
+        author: {type: String, default: 'none'},
+        date: Date,
+        content: {type: String, default: 'none'}
+    }]
+});
+let Files = mongoose.model('Files', File);
+
 let GallerySchema = new mongoose.Schema({
     filepath: String,
     fileType: String,
@@ -102,6 +115,7 @@ let adminEmail = ['zhuxingyuan123@gmail.com',
 let uploadNewsletters = multer({ dest: 'newsletters/' });
 let uploadworshipVideo = multer({ dest: 'worshipVideo/' });
 let uploadImage = multer({ dest: 'gallery/' });
+let uploadBlogImage = multer({ dest: 'blogImage/' });
 let userImage = multer({ dest: 'userImage/' });
 
 let isAuthenticated = function(req, res, next) {
@@ -341,8 +355,24 @@ app.post('/logIn/', function(req, res, next) {
     });
 });
 
+app.post("/createFile/", function(req, res, next) {
+    mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+    let files = new Files({fileName: req.body.filename});
+    let db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error!'));
+    // Files.updateOne({}, {$push: {files: { "fileName": req.body.filename }}}, function(err) {
+    //     if (err) return res.status(500).end(err);
+    //     db.close();
+    //     return res.json("success");
+    // });
+    files.save(function(err) {
+        if (err) return res.status(500).end(err);
+        db.close();
+        return res.json("success");
+    });
+});
+
 app.post('/ourGallery/', uploadImage.any(), function(req, res, next) {
-    console.log(req.files[0]);
     mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
     let gallery = new Gallery({
         filepath: req.files[0].path, 
@@ -587,6 +617,24 @@ app.post('/userImageUpload/', userImage.any(), function(req, res, next) {
     });
 });
 
+app.post('/postBlog/:id/', uploadBlogImage.array('blogImages'), function(req, res, next) {
+    mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+    let db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error!'));
+    console.log(req.files);
+    console.log(req.body.title)
+
+    req.files.forEach(function(file) {
+        Files.updateOne({_id: mongoose.Types.ObjectId(req.params.id)},
+        {$push: {posts: {'title': req.body.title, ''}}},
+        function(err) {
+            if (err) return res.status(500).end(err);
+            db.close();
+            return res.redirect("/ourBlog.html");
+        });
+    });
+});
+
 app.get('/user/:id/', function(req, res, next) {
     mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
     let db = mongoose.connection;
@@ -597,9 +645,18 @@ app.get('/user/:id/', function(req, res, next) {
     });
 });
 
-app.get('/userImage/:userId/', function(req, res, next) {
-    console.log("id:" + req.session.userId);
+app.get("/files/", function(req, res, next) {
+    mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+    let db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error!'));
+    
+    Files.find({}, function(err, doc) {
+        if (err) return res.status(500).end(err);
+        return res.json(doc);
+    });
+});
 
+app.get('/userImage/:userId/', function(req, res, next) {
     User.findOne({_id: mongoose.Types.ObjectId(req.session.userId)}, function(err, doc) {
         if (err) return res.status(500).end(err);
         if (!doc) return res.status(500).end("cannot find user!");
@@ -783,6 +840,18 @@ app.delete('/delImage/', function(req, res) {
                 return res.json(gallery.length);
             });
         });
+    });
+});
+
+app.delete('/deleteFile/', function(req, res, next) {
+    mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+    let db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error!'));
+
+    Files.findOneAndDelete({_id: mongoose.Types.ObjectId(req.body.id)}, function(err, doc) {
+        if (err) return res.status(500).end(err);
+        db.close();
+        return res.json("success");
     });
 });
 

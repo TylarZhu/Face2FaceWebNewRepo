@@ -55,10 +55,10 @@ header.masthead h1 {
   position: absolute;
   top:0;
   left:0;
-  width:100vw;
+  width:100%;
   z-index:1;
   background:rgba(175, 147, 126, 0.8);
-  opacity:0.85;
+  /* opacity:0.85; */
 }
 
 .fullscreen-video-wrap{

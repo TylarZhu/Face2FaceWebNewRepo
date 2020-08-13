@@ -47,7 +47,7 @@
 /* Other styles for the page not related to the animated dropdown */
 
 body {
-    background: #18a2b8;
+    /* background: #18a2b8; */
     background: linear-gradient(to right, #18a2b8, #33AEFF);
     padding-top: 56px;
 }
