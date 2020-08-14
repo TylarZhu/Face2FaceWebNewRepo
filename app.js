@@ -10,7 +10,8 @@ const mongoose = require('mongoose');
 const multer  = require('multer');
 const bodyParser = require('body-parser');
 require('events').EventEmitter.defaultMaxListeners = 30;
-
+const mailgun = require("mailgun-js");
+const DOMAIN = 'face2facehomechurch.com';
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -622,16 +623,20 @@ app.post('/postBlog/:id/', uploadBlogImage.array('blogImages'), function(req, re
     let db = mongoose.connection;
     db.on('error', console.error.bind(console, 'MongoDB connection error!'));
     console.log(req.files);
-    console.log(req.body.title)
+    mongoose.connect(uri, { useFindAndModify: false });
 
-    req.files.forEach(function(file) {
-        Files.updateOne({_id: mongoose.Types.ObjectId(req.params.id)},
-        {$push: {posts: {'title': req.body.title, ''}}},
-        function(err) {
-            if (err) return res.status(500).end(err);
-            db.close();
-            return res.redirect("/ourBlog.html");
+    Files.findOneAndUpdate({_id: mongoose.Types.ObjectId(req.params.id)},
+    {$push: {posts: {'title': req.body.title, 'author': req.body.author, 'date': new Date(req.body.date), 'content': req.body.content}}},
+    function(err, doc) {
+        console.log(doc);
+        // $push: {pictures: {'picturePath': file.filepath, 'picturePath': file.type}}
+        if (err) return res.status(500).end(err);
+        req.files.forEach(function(file) {
+            Files.updateOne({_id: mongoose.Types.ObjectId(req.params.id), },
+            {$push: {'pictures': {'picturePath': file.filepath, 'picturePath': file.type}}});
         });
+        db.close();
+        return res.redirect("/ourBlog.html");
     });
 });
 
