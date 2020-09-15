@@ -5,6 +5,7 @@
   "main": "app.js",
   "dependencies": {
     "@sendgrid/mail": "^7.2.0",
+    "async": "^3.2.0",
     "cookie-session": "^1.4.0",
     "dotenv": "^8.2.0",
     "email-validator": "^2.0.4",

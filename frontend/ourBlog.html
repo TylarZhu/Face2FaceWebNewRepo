@@ -77,13 +77,12 @@
                 
                 <div class="col-lg-9">
                     <div class="card border-0 shadow my-5">
-                        <div class="card-body p-5" data-aos="fade-up" id="blogArea">
+                        <div class="card-body p-5 overflow-auto" style="height:600px;" data-aos="fade-up" id="blogArea">
                             <!-- <div class="row pb-5">
-                                <div class="w-100"></div>
                                 <div class="col">
                                     <img src="../assets/img/teammemberPicture/IMG_2048.jpg" class="img-fluid rounded" alt="Card image cap">
                                 </div>
-                                <div class="col-sm-5">
+                                <div class="col-sm-6">
                                     <div class="card-block px-2">
                                         <h5 class="card-title">Xingyuan Zhu</h5>
                                         <small id="emailHelp" class="text-muted">Author: Tylar</small>
@@ -94,45 +93,22 @@
                                 </div>
                                 <div class="w-100"></div>
                                 <div class="col">
-                                    <button type="button" class="btn btn-outline-success"> 
-                                        More Pictures
+                                    <button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="bottom" title="View More"> 
                                         <i class="far fa-glasses-alt"></i>
                                     </button>
-                                    <button type="button" class="btn btn-outline-danger"> 
-                                        delete
+                                    <button type="button" class="btn btn-outline-success" data-toggle="tooltip" data-placement="bottom" title="Add More Image Or Video"> 
+                                        <i class="far fa-plus-square"></i>
+                                    </button>
+                                    <button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom" title="Delete This Blog"> 
                                         <i class="far fa-trash-alt"></i>
                                     </button>
                                 </div>
                             </div> -->
 
 
-                            <!-- <div class="row">
-                                <div class="w-100"></div>
-                                <div class="col">
-                                    <img src="../assets/img/teammemberPicture/IMG_2048.jpg" class="img-fluid rounded" alt="Card image cap">
-                                </div>
-                                <div class="col-sm-5">
-                                    <div class="card-block px-2">
-                                        <h5 class="card-title">Xingyuan Zhu</h5>
-                                        <small id="emailHelp" class="text-muted">Author: Tylar</small>
-                                        <small id="emailHelp" class="text-muted">Date: 2019/12/01</small>
-                                        <hr/>
-                                        <p class="card-text">Hi everyone, My name is Xingyuan Zhu, you can also call me Tylar. I am currently a 4th-year student at the University of Toronto, and I baptized at Easter 2018. Praise God that he let me join the Face 2 Face team and make me grow deeper in Christ. We are looking forward to seeing you join our worship! asdfsfsadfasdfsdfafdsadf</p>
-                                    </div>
-                                </div>
-                                <div class="w-100"></div>
-                                <div class="col">
-                                    <button type="button" class="btn btn-outline-success"> 
-                                        Read More
-                                        <i class="far fa-glasses-alt"></i>
-                                    </button>
-                                    <button type="button" class="btn btn-outline-danger"> 
-                                        delete
-                                        <i class="far fa-trash-alt"></i>
-                                    </button>
-                                </div>
-                            </div>
-                        </div> -->
+
+                            
+                        </div>
                     </div>
                 </div>
             </div>
@@ -197,6 +173,10 @@
             $(document).ready(function() {
                 $("body").tooltip({ selector: '[data-toggle=tooltip]' });
             });
+        </script>
+
+        <script>
+            
         </script>
 
         <script src="js/ourBlog.js"></script>

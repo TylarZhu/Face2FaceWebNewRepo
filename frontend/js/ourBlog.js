@@ -34,29 +34,37 @@
         api.onFileUpdate(function(files) {
             document.getElementById("fileList").innerHTML = '';
             document.getElementById("blogUploadForm").innerHTML = '';
+            document.getElementById("blogArea").innerHTML = '';
 
             if(files.length === 0) {
                 document.getElementById("fileList").innerHTML = `
                 <small class="form-text text-muted pl-2">There is no file.</small>
                 `;
             }
+            if(document.getElementById("blogArea").innerHTML === "") {
+                document.getElementById("blogArea").innerHTML = `
+                <small class="form-text text-muted pl-2">No Blog is selected.</small>
+                `;
+            }
             
             files.forEach(function(file){
                 let blogLength = file.posts.length;
                 let postBlogId = postBlog + file._id
+                let viewBlogId = "viewBlog" + file._id;
+
+
                 if(blogLength > 99) {
                     blogLength = "99+"
                 }
 
                 let elmt = document.createElement('div');
                 elmt.className = "dropdown-item";
-                // elmt.href = "/getBlogs/" + file._id + "/";
                 elmt.innerHTML= `
                 <i class="fal fa-folder fa-lg">
                     ${file.fileName}
                 </i>
                 <span class="badge badge-danger">${blogLength}</span>
-                <button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="View Blogs">
+                <button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="View Blogs" id="${viewBlogId}">
                     <i class="far fa-eye"></i>
                 </button>
                 <span data-toggle="tooltip" data-placement="top" title="Post A Blog">
@@ -67,17 +75,70 @@
                 <button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete This File" id="${file._id}">
                     <i class="far fa-trash-alt"></i>
                 </button>
+                
                 `;
+
                 document.getElementById("fileList").append(elmt);
+
+                api.userAdmin(function(admin){
+                    if(admin){
+                        document.getElementById(file._id).style.visibility = 'visible';
+                    } else {
+                        document.getElementById(file._id).style.visibility = 'hidden';
+                    }
+                });
                 
                 document.getElementById(file._id).addEventListener('click', function(e) {
                     e.preventDefault();
                     api.deleteFile(file._id);
                 });
 
+                document.getElementById(viewBlogId).addEventListener('click', function(e) {
+                    e.preventDefault();
+                    document.getElementById("blogArea").innerHTML = '';
+                    api.getPosts(file._id, function(items) {
+                        items.forEach(function(item) {
+                            console.log(item);
+                            elmt = document.createElement('div');
+                            elmt.className = "row pb-5";
+                            elmt.innerHTML=`
+                            <div class="col">
+                                <img src="/blogsCoverImage/${item._id}/" class="img-fluid rounded" alt="Card image cap">
+                            </div>
+                            <div class="col-sm-6">
+                                <div class="card-block px-2">
+                                    <h5 class="card-title">${item.title}</h5>
+                                    <small id="emailHelp" class="text-muted">Author: ${item.author}</small>
+                                    <small id="emailHelp" class="text-muted">Date: ${item.date.split("T")[0]}</small>
+                                    <hr/>
+                                    <p class="card-text">${item.content}</p>
+                                </div>
+                            </div>
+                            <div class="w-100"></div>
+                            <div class="col pt-3">
+                                <button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom" title="Delete This Blog" id=${item._id}> 
+                                    <i class="far fa-trash-alt"></i>
+                                </button>
+                            </div>
+                            `;
+                            document.getElementById("blogArea").append(elmt);
+                            api.userAdmin(function(admin){
+                                if(admin){
+                                    document.getElementById(item._id).style.visibility = 'visible';
+                                } else {
+                                    document.getElementById(item._id).style.visibility = 'hidden';
+                                }
+                            });
+                            document.getElementById(item._id).addEventListener('click', function(e) {
+                                e.preventDefault();
+                                api.deletePost(file._id, item._id);
+                            });
+                        });
+                    });
+                });
+
                 document.getElementById(postBlogId).addEventListener('click', function(e) {
                     e.preventDefault();
-                    // document.getElementById("uploadBlogInfo").action = "/postBlog/" + file._id + "/";
                     document.getElementById("blogUploadForm").innerHTML = `
                     <form action="/postBlog/${file._id}/" method="POST" enctype="multipart/form-data" id="uploadBlogInfo">
                         <div class="form-group">
@@ -99,12 +160,11 @@
                             </div>
                         </div>
                         <div class="form-group">
-                            <label for="exampleInputEmail1">Message Content</label>
-                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="content" placeholder="Enter Content" required></textarea>
+                            <label for="exampleInputEmail1">Message Content <small class="form-text text-muted pl-2">Content must less than 50 word.</small></label>
+                            <textarea class="form-control" id="exampleFormControlTextarea1" rows="5" maxlength="220" name="content" placeholder="Enter Content" required></textarea>
                         </div>
                         <div class="form-group">
-                            <input type="file" name="blogImages" multiple required>
-                            <small id="emailHelp" class="form-text text-muted">You can choice more than one picture.</small>
+                            <input type="file" name="blogImages" required>
                         </div>
                         <button type="submit" class="btn btn-outline-success">
                             Post

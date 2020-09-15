@@ -212,15 +212,16 @@ let api = (function(){
     module.createFile = function(filename){
         send("POST", "/createFile/", {filename: filename}, function(err, res) {
             if(err) return notifyErrorListeners(err);
+            notifyFilesListeners();
             window.location.replace("/ourBlog.html");
-            notifFilesListeners();
         });
     }
 
     module.deleteFile = function(id) {
         send("DELETE", '/deleteFile/', {id: id}, function(err, res) {
             if(err) return notifyErrorListeners(err);
-            notifFilesListeners();
+            console.log(res);
+            notifyFilesListeners();
         });
     }
 
@@ -228,9 +229,23 @@ let api = (function(){
         send("GET", "/files/", undefined, callback);
     }
 
+    module.getPosts = function(fileId, callback) {
+        send("GET", "/blogs/" + fileId + "/", undefined, function(err, res) {
+            if(err) return notifyErrorListeners(err);
+            callback(res);
+        });
+    }
+
+    module.deletePost = function(fileId, postId) {
+        send("DELETE", "/blogs/", {fileId: fileId, postId: postId}, function(err, res) {
+            if(err) return notifyErrorListeners(err);
+            window.location.replace("/ourBlog.html");
+        });
+    }
+
     let filesListeners = [];
 
-    function notifFilesListeners(){
+    function notifyFilesListeners(){
         api.getFiles(function(err, files) {
             if(err) return notifyErrorListeners(err);
             filesListeners.forEach(function(listener){
