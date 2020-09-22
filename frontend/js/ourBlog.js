@@ -67,15 +67,12 @@
                 <button type="button" class="btn btn-outline-primary" data-toggle="tooltip" data-placement="top" title="View Blogs" id="${viewBlogId}">
                     <i class="far fa-eye"></i>
                 </button>
-                <span data-toggle="tooltip" data-placement="top" title="Post A Blog">
-                    <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#postBlog" id="${postBlogId}">
-                        <i class="far fa-file-plus"></i>
-                    </button>
-                </span>
+                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#postBlog" id="${postBlogId}">
+                    <i class="far fa-file-plus"></i>
+                </button>
                 <button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="top" title="Delete This File" id="${file._id}">
                     <i class="far fa-trash-alt"></i>
                 </button>
-                
                 `;
 
                 document.getElementById("fileList").append(elmt);
@@ -83,8 +80,10 @@
                 api.userAdmin(function(admin){
                     if(admin){
                         document.getElementById(file._id).style.visibility = 'visible';
+                        document.getElementById(postBlogId).style.visibility = 'visible';
                     } else {
                         document.getElementById(file._id).style.visibility = 'hidden';
+                        document.getElementById(postBlogId).style.visibility = 'hidden';
                     }
                 });
                 
@@ -98,7 +97,8 @@
                     document.getElementById("blogArea").innerHTML = '';
                     api.getPosts(file._id, function(items) {
                         items.forEach(function(item) {
-                            console.log(item);
+                            let viewMoreId = "viewMore" + file._id;
+                            let addPictureId = "morePicture" + file._id;
                             elmt = document.createElement('div');
                             elmt.className = "row pb-5";
                             elmt.innerHTML=`
@@ -116,6 +116,12 @@
                             </div>
                             <div class="w-100"></div>
                             <div class="col pt-3">
+                                <button type="button" class="btn btn-outline-primary" data-toggle="modal" data-target="#viewImage" id=${viewMoreId}> 
+                                    <i class="far fa-glasses"></i>
+                                </button>
+                                <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#addImage" id=${addPictureId}> 
+                                    <i class="far fa-file-plus"></i>
+                                </button>
                                 <button type="button" class="btn btn-outline-danger" data-toggle="tooltip" data-placement="bottom" title="Delete This Blog" id=${item._id}> 
                                     <i class="far fa-trash-alt"></i>
                                 </button>
@@ -124,14 +130,59 @@
                             document.getElementById("blogArea").append(elmt);
                             api.userAdmin(function(admin){
                                 if(admin){
+                                    document.getElementById(addPictureId).style.visibility = 'visible';
                                     document.getElementById(item._id).style.visibility = 'visible';
                                 } else {
+                                    document.getElementById(addPictureId).style.visibility = 'hidden';
                                     document.getElementById(item._id).style.visibility = 'hidden';
                                 }
                             });
                             document.getElementById(item._id).addEventListener('click', function(e) {
                                 e.preventDefault();
                                 api.deletePost(file._id, item._id);
+                            });
+                            document.getElementById(viewMoreId).addEventListener('click', function(e) {
+                                e.preventDefault();
+                                api.viewImages(item._id, function(res) {
+                                    let first = 0;
+                                    res.forEach(function(re) {
+                                        elmt = document.createElement("div");
+                                        if(first === 0) {
+                                            elmt.className = "carousel-item active";
+                                        } else {
+                                            elmt.className = "carousel-item";
+                                        }
+                                        elmt.innerHTML=`
+                                            <img src="/imageView/${re._id}/" class="img-fluid">
+                                        `;
+                                        document.getElementById("slideItem").append(elmt);
+
+                                        elmt = document.createElement("li");
+                                        elmt.setAttribute("data-target", "#carouselExampleIndicators");
+                                        elmt.setAttribute("data-slide-to", first);
+                                        if(first === 0) {
+                                            elmt.className = "active";
+                                        }
+                                        document.getElementById("indicators").append(elmt);
+                                        first ++;
+                                    });
+                                });
+                            });
+                            document.getElementById(addPictureId).addEventListener('click', function(e) {
+                                e.preventDefault();
+                                document.getElementById("imageAddForm").innerHTML = `
+                                <form action="/postImages/${item._id}/" method="POST" enctype="multipart/form-data" id="uploadBlogInfo">
+                                    <div class="form-group">
+                                        <input type="file" name="addImages" required multiple>
+                                        <small class="form-text text-muted pl-2">Maximum 10 images.</small>
+                                    </div>
+                                    <button type="submit" class="btn btn-outline-success">
+                                        Add
+                                        <i class="fal fa-image"></i>
+                                    </button>
+                                </form>
+                                <div id="filenameError"></div>
+                                `;
                             });
                         });
                     });

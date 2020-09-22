@@ -82,6 +82,13 @@ let api = (function(){
         send("GET", "/getNewsletters/" + midStorage.newsletterPage + "/", undefined, callback);
     };
 
+    module.viewImages = function(fileId, callback){
+        send("GET", "/images/" + fileId + "/", undefined, function(err, res) {
+            if (err) return notifyErrorListeners(err);
+            callback(res);
+        });
+    }
+
 
     function getNewslettersArrayLength(callback){
         send("GET", "/getNewslettersLength/", undefined, callback);

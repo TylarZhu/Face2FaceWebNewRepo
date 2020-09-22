@@ -157,6 +157,50 @@
             </div>
         </div>
 
+        <div class="modal fade" id="addImage" tabindex="-1" role="dialog" aria-labelledby="addImageLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="addImageLabel">Add Images</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body" id="imageAddForm">
+                        
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="modal fade" id="viewImage" tabindex="-1" role="dialog" aria-labelledby="viewImageLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                    <h5 class="modal-title" id="viewImageLabel">Gallary</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                    </div>
+                    <div class="modal-body" id="imageView">
+                        <div id="carouselExampleIndicators" class="carousel slide" data-ride="carousel">
+                            <ol class="carousel-indicators" id="indicators"></ol>
+                            <div class="carousel-inner" id="slideItem"> </div>
+
+                            <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+                                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Previous</span>
+                            </a>
+                            <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+                                <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                                <span class="sr-only">Next</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <div class="fixed-bottom" id="errorBox"></div>
 
         <script src="https://kit.fontawesome.com/776a2de339.js" crossorigin="anonymous"></script>
@@ -173,10 +217,6 @@
             $(document).ready(function() {
                 $("body").tooltip({ selector: '[data-toggle=tooltip]' });
             });
-        </script>
-
-        <script>
-            
         </script>
 
         <script src="js/ourBlog.js"></script>

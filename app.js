@@ -11,9 +11,8 @@ const multer  = require('multer');
 const bodyParser = require('body-parser');
 // const async = require("async");
 require('events').EventEmitter.defaultMaxListeners = 30;
-const mailgun = require("mailgun-js");
-const DOMAIN = 'face2facehomechurch.com';
 
+// mongodb://Tylar:Aax020020@159.203.19.170:27017/face2face?authSource=admin
 
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
@@ -96,7 +95,8 @@ let Files = mongoose.model('Files', File);
 let GallerySchema = new mongoose.Schema({
     filepath: String,
     fileType: String,
-    fileId: String
+    fileId: String,
+    coverImage: {type: Boolean, default: false}
 });
 let Gallery = mongoose.model('Gallery', GallerySchema);
 
@@ -633,7 +633,8 @@ app.post('/postBlog/:id/', uploadImage.single('blogImages'), function(req, res, 
                 let gallery = new Gallery({
                     filepath: req.file.path, 
                     fileType: req.file.mimetype,
-                    fileId: doc.posts[doc.posts.length - 1]._id
+                    fileId: doc.posts[doc.posts.length - 1]._id,
+                    coverImage: true
                 });
 
                 gallery.save(function(err) {
@@ -644,6 +645,31 @@ app.post('/postBlog/:id/', uploadImage.single('blogImages'), function(req, res, 
             });
         });
     });
+});
+
+app.post('/postImages/:id/', uploadImage.array('addImages', 10), async function(req, res, next) {
+    mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true, useFindAndModify: false});
+    let db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error!'));
+
+    await req.files.forEach(function(image){ 
+        // Gallery.create({filepath: image.path, fileType: image.mimetype, fileId: req.params.id, coverImage: false}, function(err, res) {
+        //     if (err) return res.status(500).end(err);
+        // });
+        let gallery = new Gallery({
+            filepath: image.path,
+            fileType: image.mimetype,
+            fileId: req.params.id,
+            coverImage: false
+        });
+        
+        gallery.save(function(err) {
+            if (err) return res.status(500).end(err);
+        });
+    });
+    
+    // db.close();
+    return res.redirect('/ourBlog.html');
 });
 
 app.get('/user/:id/', function(req, res, next) {
@@ -686,9 +712,33 @@ app.get("/blogsCoverImage/:id/", function(req, res, next) {
     let db = mongoose.connection;
     db.on('error', console.error.bind(console, 'MongoDB connection error!'));
 
-    Gallery.findOne({'fileId': mongoose.Types.ObjectId(req.params.id)}, function(err, doc){
+    Gallery.findOne({$and: [{'fileId': mongoose.Types.ObjectId(req.params.id)}, {'coverImage': true}]}, function(err, doc){
         if (err) return res.status(500).end(err);
         db.close();
+        res.setHeader('Content-Type', doc.fileType);
+        res.sendFile(doc.filepath, { root: __dirname });
+    });
+});
+
+app.get("/images/:id/", function(req, res, next) {
+    mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+    let db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error!'));
+
+    Gallery.find({'fileId': req.params.id}, function(err, doc) {
+        if (err) return res.status(500).end(err);
+        db.close();
+        return res.json(doc);
+    });
+});
+
+app.get("/imageView/:id/", function(req, res, next) {
+    mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+    let db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error!'));
+
+    Gallery.findOne({_id: req.params.id}, function(err, doc) {
+        if (err) return res.status(500).end(err);
         res.setHeader('Content-Type', doc.fileType);
         res.sendFile(doc.filepath, { root: __dirname });
     });
