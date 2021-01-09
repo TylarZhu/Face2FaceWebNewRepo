@@ -1,3 +1,6 @@
+// --------------------------
+// This file did not used in the program, just for testing.
+// --------------------------
 (function(){
     "use strict";
     window.onload = function(){

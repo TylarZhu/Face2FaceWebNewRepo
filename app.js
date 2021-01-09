@@ -11,7 +11,14 @@ const multer  = require('multer');
 const bodyParser = require('body-parser');
 // const async = require("async");
 require('events').EventEmitter.defaultMaxListeners = 30;
-
+const mailgun = require("mailgun-js");
+const DOMAIN = 'face2facehomechurch.com';
+const mg = mailgun({apiKey: 'key-3d1884de6dcce0d907ea3815fd46c2c6', domain: DOMAIN});
+const url = "mongodb://localhost:27017/face2face";
+let Vimeo = require('vimeo').Vimeo;
+let videoUpload = new Vimeo("da6deea08e9df1a22e345faa9ba7ed9ceb091928",
+   "gfBJuG+YQ0KaqiQbLrG+1kjMLuBh+kx6qwgVJ+bC70UvrNh9gpEoa7u2XP9M8zQMUeqQqLqAVm6GhpWo/4mGTQhkTB8YJSV07pjJz/APGJsNBLpPLcQk7zVNuKEsQNuKEsQ038",
+   "3f46de8bfa564a4a3dd7bf8129222718");
 // mongodb://Tylar:Aax020020@159.203.19.170:27017/face2face?authSource=admin
 
 app.use(bodyParser.urlencoded({ extended: false }));
@@ -100,6 +107,12 @@ let GallerySchema = new mongoose.Schema({
 });
 let Gallery = mongoose.model('Gallery', GallerySchema);
 
+let TeamMemberSchema = new mongoose.Schema({
+    filepath: String,
+    fileType: String
+});
+let TeamMember = mongoose.model('TeamMember', TeamMemberSchema);
+
 let adminEmail = ['zhuxingyuan123@gmail.com',
     'angelaningzhou@gmail.com',
     'jeff48wang@gmail.com',
@@ -113,8 +126,8 @@ let adminEmail = ['zhuxingyuan123@gmail.com',
 let uploadNewsletters = multer({ dest: 'newsletters/' });
 let uploadworshipVideo = multer({ dest: 'worshipVideo/' });
 let uploadImage = multer({ dest: 'gallery/' });
-// let uploadBlogImage = multer({ dest: 'blogImage/' });
 let userImage = multer({ dest: 'userImage/' });
+let team = multer({dest: 'ourTeam/'});
 
 let isAuthenticated = function(req, res, next) {
     if (!req.session.user) return res.status(401).end("access denied");
@@ -468,35 +481,6 @@ app.post('/worshipVideo/', uploadworshipVideo.any(), function(req, res, next){
         </body>
     </html>
     `);
-    if(req.files[0].size > 70000000) return res.status(401).end(`
-    <!DOCTYPE html>
-    <html lang="en">
-        <head>
-            <meta charset="utf-8">
-            <meta http-equiv="X-UA-Compatible" content="IE=edge">
-            <meta name="viewport" content="width=device-width, initial-scale=1">
-    
-            <title>404 HTML Template by Colorlib</title>
-    
-            <link href="https://fonts.googleapis.com/css?family=Montserrat:500" rel="stylesheet">
-            <link href="https://fonts.googleapis.com/css?family=Titillium+Web:700,900" rel="stylesheet">
-    
-            <link type="text/css" rel="stylesheet" href="../css/errorPage.css"/>
-    
-        <body>
-            <div id="notfound">
-                <div class="notfound">
-                    <div class="notfound-404">
-                        <h1>401</h1>
-                    </div>
-                    <h2>The Video Must Less Than 70MB!</h2>
-                    <p>Please go back to worship video page</p>
-                    <a href="../worshipVideo.html">Go To Worship Video</a>
-                </div>
-            </div>
-        </body>
-    </html>
-    `);
 
     let file_name = req.files[0].path;
     videoUpload.upload( file_name, {'name': req.body.title, 'description': req.body.title}, function (uri) {
@@ -672,6 +656,82 @@ app.post('/postImages/:id/', uploadImage.array('addImages', 10), async function(
     return res.redirect('/ourBlog.html');
 });
 
+app.post('/team/', team.any(), function(req, res, next) {
+    if(req.files[0].mimetype !== "application/pdf") return res.status(401).end(`
+    <!DOCTYPE html>
+    <html lang="en">
+        <head>
+            <meta charset="utf-8">
+            <meta http-equiv="X-UA-Compatible" content="IE=edge">
+            <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+            <title>404 HTML Template by Colorlib</title>
+    
+            <link href="https://fonts.googleapis.com/css?family=Montserrat:500" rel="stylesheet">
+            <link href="https://fonts.googleapis.com/css?family=Titillium+Web:700,900" rel="stylesheet">
+    
+            <link type="text/css" rel="stylesheet" href="../css/errorPage.css"/>
+    
+        <body>
+            <div id="notfound">
+                <div class="notfound">
+                    <div class="notfound-404">
+                        <h1>401</h1>
+                    </div>
+                    <h2>The Team Member Info Must in PDF format!</h2>
+                    <p>Please go back to Newsletter Page</p>
+                    <a href="../index.html">Please Upload Again!</a>
+                </div>
+            </div>
+        </body>
+    </html>
+    `);
+    
+    mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+    let db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error!'));
+
+    TeamMember.find({}, function(err, docs) {
+        if (err) return res.status(500).end(err);
+        let newTeam = new TeamMember({filepath: req.files[0].path, fileType: req.files[0].mimetype});
+
+        console.log(docs);
+
+        // if nothing in collection then save directly
+        if(docs.length == 0) {
+            newTeam.save(function(err) {
+                if (err) return res.status(500).end(err);
+                db.close();
+                return res.redirect('/index.html');
+            });
+        // if there is a element, then delete the file frist and then save
+        } else {
+            fs.unlink(__dirname + '/' + docs[0].filepath, function(err){
+                if(err) return res.status(500).end(err.message);
+                TeamMember.updateMany({}, {$set: {filepath: req.files[0].path, fileType: req.files[0].mimetype}}, function(err, item) {
+                    if (err) return item.status(500).end(err.message);
+                    // console.log(err);
+                    db.close();
+                    return res.redirect('/index.html');
+                });
+            });
+        }
+    });
+});
+
+app.get('/team/', function(req, res, next) {
+    mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
+    let db = mongoose.connection;
+    db.on('error', console.error.bind(console, 'MongoDB connection error!'));
+
+    TeamMember.find({}, function(err, docs) {
+        if (err) return res.status(500).end(err);
+        db.close();
+        res.setHeader('Content-Type', docs[0].fileType);
+        return res.sendFile(docs[0].filepath, { root: __dirname });
+    });
+});
+
 app.get('/user/:id/', function(req, res, next) {
     mongoose.connect(url, {useNewUrlParser: true, useUnifiedTopology: true});
     let db = mongoose.connection;
@@ -770,7 +830,15 @@ app.get('/getNewsletters/:page/', function(req, res, next) {
 
     Newsletters.find({}, function(err, newsletters) {
         if (err) return res.status(500).end(err);
+        newsletters.sort(function compare(a, b) {
+            let dateA = new Date(a.date);
+            let dateB = new Date(b.date);
+            return dateB - dateA;
+        });
+
+        // console.log(newsletters);
         let returnData = newsletters.slice((req.params.page * 4), (req.params.page * 4 + 4));
+        
         db.close();
         return res.json(returnData);
     });
@@ -996,3 +1064,18 @@ http.createServer(app).listen(PORT, function (err) {
     if (err) console.log(err);
     else console.log("HTTP server on http://localhost:%s", PORT);
 });
+
+// const https = require('https');
+// const PORT = 3000;
+
+// var privateKey = fs.readFileSync( '/home/face2facehomechurch.com/face2facehomechurch.com.key' );
+// var certificate = fs.readFileSync( '/home/face2facehomechurch.com/face2facehomechurch.com.crt' );
+// var config = {
+//         key: privateKey,
+//         cert: certificate
+// };
+
+// https.createServer(config, app).listen(PORT, function (err) {
+//     if (err) console.log(err);
+//     else console.log("HTTPS server on https://localhost:%s", PORT);
+// });

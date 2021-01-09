@@ -20,8 +20,8 @@
                     <a class="nav-link dropdown-toggle mx-auto" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                         About Us
                     </a>
-                    <div class="dropdown-menu animate slideIn">
-                        <a class="dropdown-item nav-link text-muted" href="../aboutUs.html">Our Team</a>
+                    <div class="dropdown-menu animate slideIn" id="aboutUsItems">
+                        <a class="dropdown-item nav-link text-muted" href="/team/">Our Team</a>
                         <a class="dropdown-item nav-link text-muted" href="../ourBelieve.html">Our Beliefs</a>
                         <a class="dropdown-item nav-link text-muted" href="../ourBlog.html">Our Blog</a>
                     </div>
@@ -37,6 +37,7 @@
                 </li>
                 <li class="nav-item" id="login"><a class="nav-link js-scroll-trigger" href="../login.html">Log in</a></li>
             `;
+            // <a class="dropdown-item nav-link text-muted" href="../aboutUs.html">Our Team</a>
             if(authorized){
                 // document.getElementById("login").style.visibility = 'hidden';
                 document.getElementById("login").parentNode.removeChild(document.getElementById("login"));
@@ -46,12 +47,6 @@
                     <a class="nav-link js-scroll-trigger" id="signout">Sign Out</a>
                 `;
                 document.getElementById("titleBar").append(elmt);
-
-                // <img src="../assets/img/example.jpg" class="rounded-circle profileImgSize" alt=""></img>
-
-                // <span style="font-size: 17px; color: Dodgerblue;">
-                //     <i class="fal fa-user fa-2x profileImgSize"></i>
-                // </span>
 
                 elmt = document.createElement('li');
                 elmt.className = "nav-item dropdown";
@@ -66,6 +61,15 @@
                 </div>
                 `;
                 document.getElementById("titleBar").append(elmt);
+
+                elmt = document.createElement('a');
+                elmt.className = "dropdown-item nav-link text-muted";
+                elmt.setAttribute("data-toggle", "modal");
+                elmt.setAttribute("data-target", "#teamMember");
+                elmt.setAttribute("href", "#");
+                elmt.innerHTML = `Update Team Member`;
+                document.getElementById("aboutUsItems").append(elmt);
+
                 document.getElementById("signout").addEventListener('click', function(e) {
                     e.preventDefault();
                     api.signOut();

@@ -250,6 +250,14 @@ let api = (function(){
         });
     }
 
+    module.getTeam = function(callback){
+        send("GET", "/team/", undefined, callback);
+    }
+
+    //----------------------//
+    // Listeners            //   
+    //----------------------//
+
     let filesListeners = [];
 
     function notifyFilesListeners(){
